@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\MutualPulse.Contracts\MutualPulse.Contracts.csproj"/>
+    <ProjectReference Include="..\MutualPulse.Domain\MutualPulse.Domain.csproj"/>
+    <ProjectReference Include="..\MutualPulse.Shared\MutualPulse.Shared.csproj"/>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
+    <PackageReference Include="Scrutor"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
+  </ItemGroup>
+</Project>

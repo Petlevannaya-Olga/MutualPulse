@@ -1,0 +1,134 @@
+<Window x:Class="MutualPulse.Desktop.Views.Dialogs.ExitOnboardingDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Настройка не завершена"
+        Width="540" Height="302"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
+    <Window.Resources>
+        <LinearGradientBrush x:Key="PrimaryButtonGradient" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#7545F9" Offset="0" />
+            <GradientStop Color="#BA35E8" Offset="0.53" />
+            <GradientStop Color="#FB239D" Offset="1" />
+        </LinearGradientBrush>
+
+        <Style x:Key="OutlineButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="48" />
+            <Setter Property="Foreground" Value="#6E28D9" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Surface" Background="White"
+                                BorderBrush="#874DE9" BorderThickness="1.5"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Surface" Property="Background" Value="#F4EEFF" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Surface" Property="Opacity" Value="0.75" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="48" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Surface" Background="{StaticResource PrimaryButtonGradient}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Surface" Property="Opacity" Value="0.9" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Surface" Property="Opacity" Value="0.75" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="24">
+        <Border Background="White" CornerRadius="20">
+            <Border.Effect>
+                <DropShadowEffect Color="#18083A" BlurRadius="28"
+                                  ShadowDepth="8" Opacity="0.32" />
+            </Border.Effect>
+
+            <Grid Margin="34,28,34,28">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Width="50" Height="50" Background="#F4EFFF" CornerRadius="25">
+                        <TextBlock Text="!" Foreground="#7C42EE" FontSize="28"
+                                   FontWeight="Bold" VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="16,0,0,0"
+                                VerticalAlignment="Center">
+                        <TextBlock Text="Настройка не завершена"
+                                   Foreground="#211449" FontSize="21" FontWeight="Bold" />
+                        <TextBlock Text="Вы действительно хотите выйти?" Margin="0,3,0,0"
+                                   Foreground="#6F6589" FontSize="14" />
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Grid.Row="1" Margin="0,24,0,0"
+                           Text="Вы сможете вернуться к настройке MutualPulse при следующем запуске приложения."
+                           Foreground="#39295F" FontSize="15" LineHeight="23"
+                           TextWrapping="Wrap" />
+
+                <Grid Grid.Row="2" Margin="0,24,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="Выйти" TabIndex="1"
+                            Click="Exit_Click" Style="{StaticResource OutlineButtonStyle}" />
+                    <Button Grid.Column="2" Content="Продолжить настройку" TabIndex="0"
+                            Click="ContinueSetup_Click"
+                            Style="{StaticResource PrimaryButtonStyle}" IsCancel="True" />
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

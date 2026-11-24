@@ -1,0 +1,319 @@
+<UserControl x:Class="MutualPulse.Desktop.Views.Onboarding.ChromeCheckView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             UseLayoutRounding="True"
+             SnapsToDevicePixels="True"
+             FontFamily="Segoe UI">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+
+        <!-- Палитра приветственного экрана MutualPulse. -->
+        <LinearGradientBrush x:Key="OnboardingBackgroundBrush" StartPoint="0,0.2" EndPoint="1,0.8">
+            <GradientStop Offset="0" Color="#171038" />
+            <GradientStop Offset="0.48" Color="#26144E" />
+            <GradientStop Offset="1" Color="#401365" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="PrimaryBrush" StartPoint="0,0" EndPoint="1,0.1">
+            <GradientStop Offset="0" Color="#7545F9" />
+            <GradientStop Offset="0.53" Color="#BA35E8" />
+            <GradientStop Offset="1" Color="#FB239D" />
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="TextPrimary" Color="#24154C" />
+        <SolidColorBrush x:Key="TextSecondary" Color="#796C98" />
+
+        <!-- Поле ввода: высота и типографика по образцу ProfileSetupView Mnemora. -->
+        <Style x:Key="ProfileTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="52" />
+            <Setter Property="Padding" Value="12,0,46,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="19" />
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#D8CCED" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="CaretBrush" Value="#874DE9" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="InputBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="InputBorder" Property="BorderBrush" Value="#874DE9" />
+                                <Setter TargetName="InputBorder" Property="BorderThickness" Value="2" />
+                            </Trigger>
+                            <DataTrigger Binding="{Binding IsNameInvalid}" Value="True">
+                                <Setter TargetName="InputBorder" Property="BorderBrush" Value="#D0446A" />
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="OutlineBackButton" TargetType="Button">
+            <Setter Property="Padding" Value="14,10" />
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Surface" CornerRadius="8"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Surface" Property="Background" Value="#F4EFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ContinueButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="48" />
+            <Setter Property="MinWidth" Value="176" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Surface" CornerRadius="9"
+                                Background="{StaticResource PrimaryBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Surface" Property="Opacity" Value="0.9" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Surface" Property="Opacity" Value="0.75" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Surface" Property="Background" Value="#B9B0CF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource OnboardingBackgroundBrush}" ClipToBounds="True">
+        <!-- Компактная разметка: при минимальном размере окна 1000×650
+             карточка и кнопки полностью помещаются без прокрутки. -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Декорации используют тот же холст 1600x900, что в Mnemora. -->
+        <Viewbox Grid.RowSpan="3" Stretch="Fill" IsHitTestVisible="False">
+            <Canvas Width="1600" Height="900">
+                <Ellipse Width="690" Height="690" Canvas.Left="1120" Canvas.Top="-220">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Offset="0" Color="#48AE61F3" />
+                            <GradientStop Offset="1" Color="#00AE61F3" />
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Width="620" Height="620" Canvas.Left="-280" Canvas.Top="510">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Offset="0" Color="#366C46E7" />
+                            <GradientStop Offset="1" Color="#006C46E7" />
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Path Data="M0,210 L92,254 L165,224 L236,312 L314,280 M92,254 L48,350 L142,402 M236,312 L290,390 L374,420"
+                      Stroke="#A569F1" StrokeThickness="1.2" Opacity="0.2" />
+                <Path Data="M1260,118 L1342,164 L1420,130 L1495,214 L1600,178 M1342,164 L1310,252 L1390,302 M1495,214 L1450,322 L1554,380 L1600,350"
+                      Stroke="#C46CFF" StrokeThickness="1.2" Opacity="0.22" />
+                <Ellipse Width="8" Height="8" Canvas.Left="88" Canvas.Top="250" Fill="#A569F1" Opacity="0.5" />
+                <Ellipse Width="8" Height="8" Canvas.Left="232" Canvas.Top="308" Fill="#A569F1" Opacity="0.5" />
+                <Ellipse Width="8" Height="8" Canvas.Left="1338" Canvas.Top="160" Fill="#C46CFF" Opacity="0.5" />
+                <Ellipse Width="8" Height="8" Canvas.Left="1491" Canvas.Top="210" Fill="#C46CFF" Opacity="0.5" />
+            </Canvas>
+        </Viewbox>
+
+        <!-- Чёткий PNG-логотип для интерфейса; .ico остаётся иконкой окна/EXE. -->
+        <Grid Grid.Row="0" Width="420" Height="74" Margin="28,6,28,0"
+              HorizontalAlignment="Left">
+            <ContentControl Template="{StaticResource MutualPulseTransparentLogoTemplate}"
+                            Width="64" Height="64" HorizontalAlignment="Left"
+                            VerticalAlignment="Center" Focusable="False"
+                            IsHitTestVisible="False" />
+            <StackPanel Margin="76,0,0,0" VerticalAlignment="Center">
+                <TextBlock FontSize="28" FontWeight="SemiBold">
+                    <Run Text="Mutual" Foreground="White" /><Run Text="Pulse" Foreground="#F251D2" />
+                </TextBlock>
+                <TextBlock Text="Поиск людей для взаимных подписок" Foreground="#E4DEFF" FontSize="13" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Верхний указатель из трёх шагов по образцу Mnemora. -->
+        <Grid Grid.Row="1" MaxWidth="610" Height="64"
+              HorizontalAlignment="Stretch" Margin="24,0,24,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="112" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="112" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="112" />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20"
+                    Background="{StaticResource PrimaryBrush}" HorizontalAlignment="Center">
+                <TextBlock Text="1" Foreground="White" FontSize="16" FontWeight="SemiBold"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Column="1" Height="3" CornerRadius="2"
+                    Background="#75539C" VerticalAlignment="Center" Margin="4,0" />
+            <Border Grid.Column="2" Width="40" Height="40" CornerRadius="20"
+                    Background="{StaticResource PrimaryBrush}" HorizontalAlignment="Center">
+                <TextBlock Text="2" Foreground="White" FontSize="16"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Column="3" Height="3" CornerRadius="2"
+                    Background="#75539C" VerticalAlignment="Center" Margin="4,0" />
+            <Border Grid.Column="4" Width="40" Height="40" CornerRadius="20"
+                    BorderBrush="#75539C" BorderThickness="2" HorizontalAlignment="Center">
+                <TextBlock Text="3" Foreground="#C9B9E5" FontSize="16"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="О себе" Foreground="White"
+                       FontWeight="SemiBold" FontSize="14" TextAlignment="Center" />
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="Chrome" Foreground="#C9B9E5"
+                       FontSize="14" TextAlignment="Center" />
+            <TextBlock Grid.Row="1" Grid.Column="4" Text="Instagram" Foreground="#C9B9E5"
+                       FontSize="14" TextAlignment="Center" />
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="40,0" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" MaxWidth="720" Padding="40,32" Background="White" CornerRadius="22"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect Color="#10052B" BlurRadius="28" ShadowDepth="8" Opacity="0.3"/>
+                </Border.Effect>
+                <StackPanel>
+                    <!-- Иконка браузера в круге — тот же размер и оформление, что на шаге 1. -->
+                    <Grid Width="72" Height="72" HorizontalAlignment="Center" Margin="0,0,0,18">
+                        <Ellipse Fill="#F5EEFF" Stroke="#A74BF0" StrokeThickness="2.5" />
+                        <Viewbox Width="42" Height="42" Stretch="Uniform"
+                                 HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Canvas Width="48" Height="48">
+                                <Rectangle Canvas.Left="4" Canvas.Top="8" Width="40" Height="32"
+                                           RadiusX="5" RadiusY="5" Fill="Transparent"
+                                           Stroke="#8241D8" StrokeThickness="2.8" />
+                                <Path Data="M 5,18 L 43,18" Stroke="#8241D8"
+                                      StrokeThickness="2.8" />
+                                <Ellipse Canvas.Left="10" Canvas.Top="12" Width="3" Height="3"
+                                         Fill="#8241D8" />
+                                <Ellipse Canvas.Left="16" Canvas.Top="12" Width="3" Height="3"
+                                         Fill="#8241D8" />
+                                <Path Data="M 15,28 L 22,34 L 34,22"
+                                      Stroke="#8241D8" StrokeThickness="3.2"
+                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                      StrokeLineJoin="Round" />
+                            </Canvas>
+                        </Viewbox>
+                    </Grid>
+                    <TextBlock Text="Проверка Google Chrome" FontSize="28" FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimary}" TextAlignment="Center"
+                               Margin="0,0,0,14"/>
+                    <TextBlock Text="Для работы с Instagram нужен Google Chrome. Проверим, установлен ли браузер и запускается ли он через Selenium."
+                               FontSize="16" TextWrapping="Wrap" Foreground="{StaticResource TextSecondary}"
+                               TextAlignment="Center" LineHeight="24" Margin="0,0,0,24"/>
+                    <Border Background="#F5EFFF" CornerRadius="12" Padding="18">
+                        <StackPanel>
+                            <TextBlock x:Name="StatusLabel" Text="Подготовка к проверке…"
+                                       TextWrapping="Wrap" Foreground="#332455" FontSize="15"/>
+                            <!-- Два успешно проверенных условия показываем раздельно.
+                                 При проверке и ошибках остаётся обычный StatusLabel. -->
+                            <StackPanel x:Name="SuccessDetails" Visibility="Collapsed">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <Grid Width="24" Height="24" Margin="0,0,12,0">
+                                        <Ellipse Fill="#279B63" />
+                                        <Path Data="M 6,12 L 10,16 L 18,8" Stroke="White"
+                                              StrokeThickness="2.5" StrokeStartLineCap="Round"
+                                              StrokeEndLineCap="Round" StrokeLineJoin="Round" />
+                                    </Grid>
+                                    <TextBlock Text="Google Chrome установлен" FontSize="15"
+                                               Foreground="#332455" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Grid Width="24" Height="24" Margin="0,0,12,0">
+                                        <Ellipse Fill="#279B63" />
+                                        <Path Data="M 6,12 L 10,16 L 18,8" Stroke="White"
+                                              StrokeThickness="2.5" StrokeStartLineCap="Round"
+                                              StrokeEndLineCap="Round" StrokeLineJoin="Round" />
+                                    </Grid>
+                                    <TextBlock Text="Браузер успешно запускается через Selenium" FontSize="15"
+                                               Foreground="#332455" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </StackPanel>
+                            <ProgressBar x:Name="CheckProgress" IsIndeterminate="True"
+                                         Height="4" Foreground="#9352EA" Margin="0,15,0,0"
+                                         Visibility="Collapsed"/>
+                        </StackPanel>
+                    </Border>
+                    <Grid Margin="0,25,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" x:Name="BackButton" Click="BackButton_OnClick"
+                                HorizontalAlignment="Left" VerticalAlignment="Top"
+                                Style="{StaticResource OutlineBackButton}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="←" FontSize="19" Margin="0,0,9,0"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Text="Назад" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <WrapPanel Grid.Column="2" HorizontalAlignment="Right">
+                            <Button x:Name="DownloadButton" Content="Установить Chrome"
+                                    Click="DownloadButton_OnClick" Style="{StaticResource OutlineBackButton}"
+                                    Margin="0,0,8,8" Visibility="Collapsed"/>
+                            <Button x:Name="RetryButton" Content="Повторить проверку"
+                                    Click="RetryButton_OnClick" Style="{StaticResource ContinueButtonStyle}"
+                                    Margin="0,0,8,8" Visibility="Collapsed"/>
+                            <Button x:Name="ContinueButton" Content="Далее"
+                                    Click="ContinueButton_OnClick" Style="{StaticResource ContinueButtonStyle}"
+                                    Margin="0,0,0,8" IsEnabled="False" Visibility="Collapsed"/>
+                        </WrapPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <TextBlock Grid.Row="1" Text="Шаг 2 из 3" Foreground="#F6F0FF"
+                       HorizontalAlignment="Center" FontSize="15" Margin="0,12,0,0" />
+        </Grid>
+    </Grid>
+</UserControl>

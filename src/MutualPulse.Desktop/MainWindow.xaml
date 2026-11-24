@@ -1,0 +1,32 @@
+<Window x:Class="MutualPulse.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:onboarding="clr-namespace:MutualPulse.Desktop.Views.Onboarding"
+        xmlns:workspace="clr-namespace:MutualPulse.Desktop.Views.Workspace"
+        Title="MutualPulse — Поиск людей для взаимных подписок"
+        Width="1280" Height="800" MinWidth="1000" MinHeight="650"
+        Style="{StaticResource MaterialDesignWindow}" WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI" UseLayoutRounding="True" SnapsToDevicePixels="True"
+        Loaded="MainWindow_OnLoaded">
+    <Grid>
+        <onboarding:WelcomeView x:Name="WelcomeScreen" StartRequested="Welcome_OnStart"/>
+        <onboarding:OnboardingStepOneView x:Name="ProfileScreen" Visibility="Collapsed"
+                                               BackRequested="Profile_OnBack"
+                                               ContinueRequested="Profile_OnContinue"/>
+        <onboarding:ChromeCheckView x:Name="ChromeScreen" Visibility="Collapsed"
+                                    BackRequested="Chrome_OnBack"
+                                    RetryRequested="Chrome_OnRetry"
+                                    DownloadRequested="Chrome_OnDownload"
+                                    ContinueRequested="Chrome_OnContinue"/>
+        <onboarding:InstagramConnectView x:Name="InstagramScreen" Visibility="Collapsed"
+                                          BackRequested="Instagram_OnBack"
+                                          OpenRequested="Instagram_OnOpen"
+                                          VerifyRequested="Instagram_OnVerify"
+                                          ContinueRequested="Instagram_OnContinue"
+                                          ResetRequested="Instagram_OnReset"/>
+        <workspace:WorkspaceView x:Name="WorkspaceScreen" Visibility="Collapsed"
+                                 ReconnectRequested="Workspace_OnReconnect"/>
+        <Border x:Name="DialogOverlay" Background="#940D0825" Visibility="Collapsed"
+                Panel.ZIndex="10"/>
+    </Grid>
+</Window>
